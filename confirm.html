@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Konfirmasi Pilihan</title>
+</head>
+
+<body>
+
+<h2>Konfirmasi Pilihan Anda</h2>
+<p id="info"></p>
+<br>
+<button onclick="sendVote()">YA, KIRIM SUARA</button>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getFirestore, addDoc, collection, doc, updateDoc }
+    from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "API_KEY_KAMU",
+    authDomain: "PROJECT_ID.firebaseapp.com",
+    projectId: "PROJECT_ID",
+    storageBucket: "PROJECT_ID.appspot.com",
+    messagingSenderId: "xxxx",
+    appId: "xxxx"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const token = localStorage.getItem("token");
+  const candidate = localStorage.getItem("candidate");
+
+  document.getElementById("info").innerHTML =
+    "Anda memilih calon nomor: <b>" + candidate + "</b>";
+
+  window.sendVote = async function(){
+    // Simpan vote
+    await addDoc(collection(db, "votes"), {
+      token: token,
+      candidate: candidate,
+      timestamp: new Date()
+    });
+
+    // Token jadi USED
+    await updateDoc(doc(db, "tokens", token), {
+      used: true
+    });
+
+    // Ke halaman selesai
+    window.location.href = "done.html";
+  }
+</script>
+
+</body>
+</html>
