@@ -1,62 +1,76 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Pilih Calon</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-Voting Sekolah</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f2f2f2;
+    }
+    h2 {
+      text-align: center;
+    }
+    .kandidat {
+      background: white;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 2px solid #ccc;
+      transition: 0.2s;
+    }
+    .kandidat:hover {
+      border-color: #4CAF50;
+      background: #eaffea;
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      background: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
 </head>
-
 <body>
-<h2>Pilih Calon Anda</h2>
 
-<div id="list"></div>
+<h2>Pilih Kandidat</h2>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import { getFirestore, collection, getDocs } 
-    from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+<div id="k1" class="kandidat" onclick="pilih('Naiwah')">1. Naiwah</div>
+<div id="k2" class="kandidat" onclick="pilih('Nasrah')">2. Nasrah</div>
+<div id="k3" class="kandidat" onclick="pilih('Anugerah')">3. Anugerah</div>
 
-  const firebaseConfig = {
-    apiKey: "API_KEY_KAMU",
-    authDomain: "PROJECT_ID.firebaseapp.com",
-    projectId: "PROJECT_ID",
-    storageBucket: "PROJECT_ID.appspot.com",
-    messagingSenderId: "xxxx",
-    appId: "xxxx"
-  };
+<button onclick="kirimVote()">KIRIM VOTE</button>
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+<script>
+let pilihan = "";
 
-  const token = localStorage.getItem("token");
-  if(!token){
-    window.location.href = "index.html";
+function pilih(nama) {
+  pilihan = nama;
+  alert("Kamu memilih: " + nama);
+}
+
+function kirimVote() {
+  if (pilihan === "") {
+    alert("Silakan pilih kandidat dulu.");
+    return;
   }
 
-  const div = document.getElementById("list");
+  fetch("https://script.google.com/macros/s/AKfycbzXKUWp6RvGmI2RKcTAftBZgC6Te1SQwsaUwwezdWxPmyTgQ9x8A-zf3ds5i4vmDH0I/exec", {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify({ kandidat: pilihan })
+  });
 
-  async function load(){
-    const q = await getDocs(collection(db, "candidates"));
-    q.forEach(docu => {
-      const c = docu.data();
-
-      div.innerHTML += `
-        <div style="border:1px solid black; padding:10px; margin:10px;">
-          <img src="${c.photo}" width="120"><br>
-          <b>${c.name}</b><br>
-          ${c.visi}<br><br>
-          <button onclick="choose('${docu.id}')">Pilih</button>
-        </div>
-      `;
-    });
-  }
-
-  load();
-
-  window.choose = function(id){
-    localStorage.setItem("candidate", id);
-    window.location.href = "confirm.html";
-  }
-
+  window.location.href = "done.html";
+}
 </script>
 
 </body>
