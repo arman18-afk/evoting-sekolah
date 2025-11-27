@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Pilih Calon</title>
+</head>
+
+<body>
+<h2>Pilih Calon Anda</h2>
+
+<div id="list"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getFirestore, collection, getDocs } 
+    from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "API_KEY_KAMU",
+    authDomain: "PROJECT_ID.firebaseapp.com",
+    projectId: "PROJECT_ID",
+    storageBucket: "PROJECT_ID.appspot.com",
+    messagingSenderId: "xxxx",
+    appId: "xxxx"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const token = localStorage.getItem("token");
+  if(!token){
+    window.location.href = "index.html";
+  }
+
+  const div = document.getElementById("list");
+
+  async function load(){
+    const q = await getDocs(collection(db, "candidates"));
+    q.forEach(docu => {
+      const c = docu.data();
+
+      div.innerHTML += `
+        <div style="border:1px solid black; padding:10px; margin:10px;">
+          <img src="${c.photo}" width="120"><br>
+          <b>${c.name}</b><br>
+          ${c.visi}<br><br>
+          <button onclick="choose('${docu.id}')">Pilih</button>
+        </div>
+      `;
+    });
+  }
+
+  load();
+
+  window.choose = function(id){
+    localStorage.setItem("candidate", id);
+    window.location.href = "confirm.html";
+  }
+
+</script>
+
+</body>
+</html>
