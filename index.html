@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Pemilih</title>
+</head>
+
+<body>
+<h2>PEMILIHAN KETUA OSIS</h2>
+<p>Masukkan Token Anda:</p>
+
+<input id="tokenInput" type="text" placeholder="Token..." />
+<br><br>
+<button onclick="login()">MASUK</button>
+
+<p id="msg" style="color:red;"></p>
+
+<script type="module">
+  // === Firebase Setup ===
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getFirestore, doc, getDoc } 
+    from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "API_KEY_KAMU",
+    authDomain: "PROJECT_ID.firebaseapp.com",
+    projectId: "PROJECT_ID",
+    storageBucket: "PROJECT_ID.appspot.com",
+    messagingSenderId: "xxxx",
+    appId: "xxxx"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ====== LOGIN FUNCTION ========
+  async function login(){
+    const token = document.getElementById("tokenInput").value.trim();
+    if(token === ""){
+      document.getElementById("msg").innerHTML = "Token tidak boleh kosong!";
+      return;
+    }
+
+    const tokenRef = doc(db, "tokens", token);
+    const snap = await getDoc(tokenRef);
+
+    if(!snap.exists()){
+      document.getElementById("msg").innerHTML = "Token tidak ditemukan!";
+      return;
+    }
+
+    if(snap.data().used === true){
+      document.getElementById("msg").innerHTML = "Token sudah digunakan!";
+      return;
+    }
+
+    // SIMPAN TOKEN DI BROWSER
+    localStorage.setItem("token", token);
+
+    // LANJUT KE HALAMAN VOTE
+    window.location.href = "vote.html";
+  }
+</script>
+
+</body>
+</html>
