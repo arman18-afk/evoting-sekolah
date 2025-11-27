@@ -3,17 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Terima Kasih</title>
+  <title>Vote Berhasil</title>
   <style>
     body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       text-align: center;
-      font-family: Arial;
-      padding: 30px;
+      padding: 20px;
+    }
+
+    .box {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 26px;
+      color: #2d3436;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 18px;
+      color: #636e72;
+    }
+
+    .check {
+      font-size: 60px;
+      color: #2ecc71;
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
-  <h2>Terima kasih sudah memilih!</h2>
-  <p>Suaramu sudah masuk ke sistem.</p>
+  <div class="box">
+    <div class="check">✔</div>
+    <h1>Terima Kasih Sudah Memilih!</h1>
+    <p>Suaramu telah direkam dalam sistem.</p>
+  </div>
 </body>
 </html>
